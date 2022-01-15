@@ -108,8 +108,43 @@ function inputHandler(event: KeyboardEvent): void {
 	}
 }
 
-function initGame(game: Game): void {
+const board_size: number = 21;
 
+function initGame(game: Game): void {
+	// initializing the board
+	let cells: CellContent[][] = [];
+	for (let i = 0; i < board_size; i++){
+		let new_row: CellContent[] = [];
+		for (let j = 0; j < board_size; j++){
+			new_row.push(CellContent.FREE);
+		}
+		cells.push(new_row);
+	}
+	game.board.cells = cells;
+
+	// initializing the snake
+	game.snake.direction = Direction.EAST;
+	const init_pos: number = Math.round(board_size / 2);
+	game.snake.locations = [
+		[init_pos, init_pos],
+		[init_pos, init_pos - 1],
+		[init_pos, init_pos - 2]
+	];
+	game.board.cells[init_pos][init_pos] = CellContent.SNAKE;
+	game.board.cells[init_pos][init_pos - 1] = CellContent.SNAKE;
+	game.board.cells[init_pos][init_pos - 2] = CellContent.SNAKE;
+
+
+	//initializing the apple's location
+	let apple_pos: Position;
+	do {
+		apple_pos = [
+			Math.round(Math.random() * board_size),
+			Math.round(Math.random() * board_size)
+		]
+	} while (game.board.cells[apple_pos[0]][apple_pos[1]] == CellContent.SNAKE);
+	game.board.apple_position = apple_pos;
+	game.board.cells[apple_pos[0]][apple_pos[1]] = CellContent.APPLE;		
 }
 
 function gameLoop(current_time: number): void {
