@@ -2,10 +2,11 @@
 type Position = [number, number];
 
 enum Direction {
-	NORTH,
-	EAST,
-	SOUTH,
-	WEST
+	// the numeric values are actually used in oppositeDirections function
+	NORTH = 0,
+	EAST = 1,
+	SOUTH = 2,
+	WEST = 3
 }
 
 type Snake = {
@@ -93,7 +94,14 @@ function placeApple(board: Board): void {
 	board.cells[new_pos[0]][new_pos[1]] = CellContent.APPLE;
 }
 
+function oppositeDirections(dir1: Direction, dir2: Direction): boolean {
+	return (Math.abs(dir1 - dir2) == 2);
+}
+
 function update(game: Game): void {
+	if (!oppositeDirections(pending_direction, game.snake.direction)) {
+		game.snake.direction = pending_direction;
+	}
 	let next_cell: Position = getHeadsNextPosition(game.snake);
 	let next_cell_content: CellContent = getCellContent(game.board, next_cell);
 	let grow: boolean = false;
@@ -110,19 +118,21 @@ function update(game: Game): void {
 	}
 }
 
+let pending_direction: Direction = Direction.EAST;
+
 function inputHandler(event: KeyboardEvent): void {
 	switch (event.key) {
 		case 'ArrowUp':
-			game.snake.direction = Direction.NORTH;
+			pending_direction = Direction.NORTH;
 			break;
 		case 'ArrowRight':
-			game.snake.direction = Direction.EAST;
+			pending_direction = Direction.EAST;
 			break;
 		case 'ArrowDown':
-			game.snake.direction = Direction.SOUTH;
+			pending_direction = Direction.SOUTH;
 			break;
 		case 'ArrowLeft':
-			game.snake.direction = Direction.WEST;
+			pending_direction = Direction.WEST;
 			break;
 	}
 }
