@@ -11,6 +11,7 @@ enum Direction {
 type Snake = {
 	locations: Position[];
 	direction: Direction;
+	speed: number;
 }
 
 enum CellContent {
@@ -27,6 +28,8 @@ type Board = {
 type Game = {
 	snake: Snake;
 	board: Board;
+	last_frame_timestamp: number;
+	board_element: HTMLElement;
 }
 
 let game: Game;
@@ -111,6 +114,9 @@ function inputHandler(event: KeyboardEvent): void {
 const board_size: number = 21;
 
 function initGame(game: Game): void {
+	game.last_frame_timestamp = 0;
+	game.board_element = document.getElementById('board');
+
 	// initializing the board
 	let cells: CellContent[][] = [];
 	for (let i = 0; i < board_size; i++){
@@ -124,6 +130,7 @@ function initGame(game: Game): void {
 
 	// initializing the snake
 	game.snake.direction = Direction.EAST;
+	game.snake.speed = 3;
 	const init_pos: number = Math.round(board_size / 2);
 	game.snake.locations = [
 		[init_pos, init_pos],
@@ -144,15 +151,42 @@ function initGame(game: Game): void {
 		]
 	} while (game.board.cells[apple_pos[0]][apple_pos[1]] == CellContent.SNAKE);
 	game.board.apple_position = apple_pos;
-	game.board.cells[apple_pos[0]][apple_pos[1]] = CellContent.APPLE;		
+	game.board.cells[apple_pos[0]][apple_pos[1]] = CellContent.APPLE;
+}
+
+function drawCell(pos: Position): void {
+	const element: HTMLElement = document.createElement('div');
+	element.style.gridRowStart = (pos[1] + 1).toString();
+	element.style.gridColumnStart = (pos[0] + 1).toString();
+	const element_type: CellContent = game.board.cells[pos[0]][pos[1]];
+	if (element_type == CellContent.SNAKE) {
+		element.classList.add('snake');
+	}
+	else if (element_type == CellContent.APPLE) {
+		element.classList.add('apple');
+	}
+	game.board_element.appendChild(element);
+}
+
+function draw(game: Game): void {
+	game.board_element.innerHTML = '';
+	game.snake.locations.forEach(drawCell);
+	drawCell(game.board.apple_position);
 }
 
 function gameLoop(current_time: number): void {
-
+	window.requestAnimationFrame(gameLoop);
+	const frame_duration: number = (current_time - game.last_frame_timestamp) / 1000;
+	if (frame_duration < 1 / game.snake.speed) {
+		return;
+	}
+	game.last_frame_timestamp = current_time;
+	update(game);
+	draw(game);
 }
 
-function main() {
+function main(): void {
 	window.addEventListener('keydown', inputHandler);
 	initGame(game);
-	gameLoop(0);
+	gameLoop(game.last_frame_timestamp);
 }
