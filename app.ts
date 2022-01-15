@@ -55,6 +55,10 @@ function getHeadsNextPosition(snake: Snake): Position {
 			break;
 		}
 	}
+	current_position = [
+		(current_position[0] + board_size) % board_size,
+		(current_position[1] + board_size) % board_size
+	]
 	return current_position;
 
 }
