@@ -113,11 +113,8 @@ function inputHandler(event: KeyboardEvent): void {
 
 const board_size: number = 21;
 
-function initGame(game: Game): void {
-	game.last_frame_timestamp = 0;
-	game.board_element = document.getElementById('board');
+function initGame(): void {
 
-	// initializing the board
 	let cells: CellContent[][] = [];
 	for (let i = 0; i < board_size; i++){
 		let new_row: CellContent[] = [];
@@ -126,23 +123,31 @@ function initGame(game: Game): void {
 		}
 		cells.push(new_row);
 	}
-	game.board.cells = cells;
 
-	// initializing the snake
-	game.snake.direction = Direction.EAST;
-	game.snake.speed = 3;
 	const init_pos: number = Math.round(board_size / 2);
-	game.snake.locations = [
-		[init_pos, init_pos],
-		[init_pos, init_pos - 1],
-		[init_pos, init_pos - 2]
-	];
+
+	game = {
+		snake: {
+			locations: [
+				[init_pos, init_pos],
+				[init_pos, init_pos - 1],
+				[init_pos, init_pos - 2]
+			],
+			direction: Direction.EAST,
+			speed: 3
+		},
+		board: {
+			cells: cells,
+			apple_position: [0, 0]
+		},
+		last_frame_timestamp: 0,
+		board_element: document.getElementById('board')
+	}
+
 	game.board.cells[init_pos][init_pos] = CellContent.SNAKE;
 	game.board.cells[init_pos][init_pos - 1] = CellContent.SNAKE;
 	game.board.cells[init_pos][init_pos - 2] = CellContent.SNAKE;
 
-
-	//initializing the apple's location
 	let apple_pos: Position;
 	do {
 		apple_pos = [
@@ -187,6 +192,8 @@ function gameLoop(current_time: number): void {
 
 function main(): void {
 	window.addEventListener('keydown', inputHandler);
-	initGame(game);
+	initGame();
 	gameLoop(game.last_frame_timestamp);
 }
+
+main();
