@@ -165,7 +165,7 @@ function initGame(): void {
 				[init_pos, init_pos - 2]
 			],
 			direction: Direction.EAST,
-			speed: 3
+			speed: 10
 		},
 		board: {
 			cells: cells,
