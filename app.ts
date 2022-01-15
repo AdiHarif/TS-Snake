@@ -59,7 +59,7 @@ function getCellContent(board: Board, position: Position): CellContent {
 
 function advanceSnake(snake: Snake, board: Board, grow: boolean): void {
 	if (!grow) {
-		let tail_position: Position = snake.locations[-1];
+		let tail_position: Position = getTail(snake);
 		board.cells[tail_position[0]][tail_position[1]] = CellContent.FREE;
 		snake.locations.pop();
 	}
@@ -70,6 +70,10 @@ function advanceSnake(snake: Snake, board: Board, grow: boolean): void {
 
 function positionEquals(pos1: Position, pos2: Position): boolean {
 	return pos1[0] == pos2[0] && pos1[1] == pos2[1];
+}
+
+function getTail(snake: Snake): Position {
+	return [...snake.locations[-1]];
 }
 
 function update(game: Game): void {
