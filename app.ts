@@ -78,7 +78,7 @@ function positionEquals(pos1: Position, pos2: Position): boolean {
 }
 
 function getTail(snake: Snake): Position {
-	return [...snake.locations[-1]];
+	return [...snake.locations[snake.locations.length - 1]];
 }
 
 function update(game: Game): void {
