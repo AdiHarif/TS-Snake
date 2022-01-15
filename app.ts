@@ -161,8 +161,8 @@ function initGame(): void {
 
 function drawCell(pos: Position): void {
 	const element: HTMLElement = document.createElement('div');
-	element.style.gridRowStart = (pos[1] + 1).toString();
-	element.style.gridColumnStart = (pos[0] + 1).toString();
+	element.style.gridRowStart = (pos[0] + 1).toString();
+	element.style.gridColumnStart = (pos[1] + 1).toString();
 	const element_type: CellContent = game.board.cells[pos[0]][pos[1]];
 	if (element_type == CellContent.SNAKE) {
 		element.classList.add('snake');
