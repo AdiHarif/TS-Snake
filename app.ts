@@ -30,11 +30,31 @@ type Game = {
 }
 
 function getHeadsNextPosition(snake: Snake): Position {
-	
+	let current_position: Position = [...snake.locations[0]];
+	switch (snake.direction) {
+		case Direction.NORTH: {
+			current_position[0]--;
+			break;
+		}
+		case Direction.EAST: {
+			current_position[1]++;
+			break;
+		}
+		case Direction.SOUTH: {
+			current_position[0]++;
+			break;
+		}
+		case Direction.WEST: {
+			current_position[1]--;
+			break;
+		}
+	}
+	return current_position;
+
 }
 
 function getCellContent(board: Board, position: Position): CellContent {
-
+	return board.cells[position[0]][position[1]];
 }
 
 function advanceSnake(snake: Snake, grow: boolean): void {
