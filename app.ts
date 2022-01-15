@@ -29,6 +29,8 @@ type Game = {
 	board: Board;
 }
 
+let game: Game;
+
 function getHeadsNextPosition(snake: Snake): Position {
 	let current_position: Position = [...snake.locations[0]];
 	switch (snake.direction) {
@@ -89,4 +91,20 @@ function update(game: Game): void {
 	advanceSnake(game.snake, game.board, grow);
 }
 
+function inputHandler(event: KeyboardEvent): void {
+	switch (event.key) {
+		case 'ArrowUp':
+			game.snake.direction = Direction.NORTH;
+			break;
+		case 'ArrowRight':
+			game.snake.direction = Direction.EAST;
+			break;
+		case 'ArrowDown':
+			game.snake.direction = Direction.SOUTH;
+			break;
+		case 'ArrowLeft':
+			game.snake.direction = Direction.WEST;
+			break;
+	}
+}
 
