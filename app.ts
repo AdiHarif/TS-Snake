@@ -18,6 +18,7 @@ type Snake = {
 enum CellContent {
 	FREE,
 	SNAKE,
+	SNAKE_HEAD,
 	APPLE
 }
 
@@ -73,9 +74,11 @@ function advanceSnake(snake: Snake, board: Board, grow: boolean): void {
 		board.cells[tail_position[0]][tail_position[1]] = CellContent.FREE;
 		snake.locations.pop();
 	}
-	let head_next_position: Position = getHeadsNextPosition(snake);
+	const head_next_position: Position = getHeadsNextPosition(snake);
+	const head_current_position =  snake.locations[0];
+	board.cells[head_current_position[0]][head_current_position[1]] = CellContent.SNAKE;
+	board.cells[head_next_position[0]][head_next_position[1]] = CellContent.SNAKE_HEAD;
 	snake.locations.unshift(head_next_position);
-	board.cells[head_next_position[0]][head_next_position[1]] = CellContent.SNAKE;
 }
 
 function positionEquals(pos1: Position, pos2: Position): boolean {
@@ -88,12 +91,14 @@ function getTail(snake: Snake): Position {
 
 function placeApple(board: Board): void {
 	let new_pos: Position;
+	let new_pos_content: CellContent;
 	do {
 		new_pos = [
 			Math.round(Math.random() * (board_size - 1)),
 			Math.round(Math.random() * (board_size - 1))
 		]
-	} while (board.cells[new_pos[0]][new_pos[1]] == CellContent.SNAKE);
+		new_pos_content = board.cells[new_pos[0]][new_pos[1]];
+	} while (new_pos_content == CellContent.SNAKE || new_pos_content == CellContent.SNAKE_HEAD);
 	board.apple_position = new_pos;
 	board.cells[new_pos[0]][new_pos[1]] = CellContent.APPLE;
 }
@@ -175,7 +180,7 @@ function initGame(): void {
 		board_element: document.getElementById('board')
 	}
 
-	game.board.cells[init_pos][init_pos] = CellContent.SNAKE;
+	game.board.cells[init_pos][init_pos] = CellContent.SNAKE_HEAD;
 	game.board.cells[init_pos][init_pos - 1] = CellContent.SNAKE;
 	game.board.cells[init_pos][init_pos - 2] = CellContent.SNAKE;
 
@@ -187,11 +192,19 @@ function drawCell(pos: Position): void {
 	element.style.gridRowStart = (pos[0] + 1).toString();
 	element.style.gridColumnStart = (pos[1] + 1).toString();
 	const element_type: CellContent = game.board.cells[pos[0]][pos[1]];
-	if (element_type == CellContent.SNAKE) {
-		element.classList.add('snake');
-	}
-	else if (element_type == CellContent.APPLE) {
-		element.classList.add('apple');
+	switch (element_type) {
+		case CellContent.SNAKE: {
+			element.classList.add('snake');
+			break;
+		}
+		case CellContent.SNAKE_HEAD:{
+			element.classList.add('snake-head');
+			break;
+		}
+		case CellContent.APPLE:{
+			element.classList.add('apple');
+			break;
+		}
 	}
 	game.board_element.appendChild(element);
 }
