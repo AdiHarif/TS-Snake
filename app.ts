@@ -108,3 +108,16 @@ function inputHandler(event: KeyboardEvent): void {
 	}
 }
 
+function initGame(game: Game): void {
+
+}
+
+function gameLoop(current_time: number): void {
+
+}
+
+function main() {
+	window.addEventListener('keydown', inputHandler);
+	initGame(game);
+	gameLoop(0);
+}
