@@ -86,8 +86,8 @@ function placeApple(board: Board): void {
 	let new_pos: Position;
 	do {
 		new_pos = [
-			Math.round(Math.random() * board_size),
-			Math.round(Math.random() * board_size)
+			Math.round(Math.random() * (board_size - 1)),
+			Math.round(Math.random() * (board_size - 1))
 		]
 	} while (board.cells[new_pos[0]][new_pos[1]] == CellContent.SNAKE);
 	board.apple_position = new_pos;
