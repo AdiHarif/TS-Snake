@@ -57,15 +57,18 @@ function getCellContent(board: Board, position: Position): CellContent {
 	return board.cells[position[0]][position[1]];
 }
 
-function advanceSnake(snake: Snake, grow: boolean): void {
-
+function advanceSnake(snake: Snake, board: Board, grow: boolean): void {
+	if (!grow) {
+		let tail_position: Position = snake.locations[-1];
+		board.cells[tail_position[0]][tail_position[1]] = CellContent.FREE;
+		snake.locations.pop();
+	}
+	let head_next_position: Position = getHeadsNextPosition(snake);
+	snake.locations.unshift(head_next_position);
+	board.cells[head_next_position[0]][head_next_position[1]] = CellContent.SNAKE;
 }
 
 function positionEquals(pos1: Position, pos2: Position): boolean {
-
-}
-
-function getTail(snake:Snake): Position {
 
 }
 
@@ -79,7 +82,7 @@ function update(game: Game): void {
 	else if (next_cell_content == CellContent.SNAKE && !positionEquals(getTail(game.snake), next_cell)) {
 		//handle game over
 	}
-	advanceSnake(game.snake, grow);
+	advanceSnake(game.snake, game.board, grow);
 }
 
 
