@@ -81,6 +81,18 @@ function getTail(snake: Snake): Position {
 	return [...snake.locations[snake.locations.length - 1]];
 }
 
+function placeApple(board: Board): void {
+	let new_pos: Position;
+	do {
+		new_pos = [
+			Math.round(Math.random() * board_size),
+			Math.round(Math.random() * board_size)
+		]
+	} while (board.cells[new_pos[0]][new_pos[1]] == CellContent.SNAKE);
+	board.apple_position = new_pos;
+	board.cells[new_pos[0]][new_pos[1]] = CellContent.APPLE;
+}
+
 function update(game: Game): void {
 	let next_cell: Position = getHeadsNextPosition(game.snake);
 	let next_cell_content: CellContent = getCellContent(game.board, next_cell);
@@ -92,6 +104,10 @@ function update(game: Game): void {
 		//handle game over
 	}
 	advanceSnake(game.snake, game.board, grow);
+
+	if (grow) {
+		placeApple(game.board);
+	}
 }
 
 function inputHandler(event: KeyboardEvent): void {
@@ -148,15 +164,7 @@ function initGame(): void {
 	game.board.cells[init_pos][init_pos - 1] = CellContent.SNAKE;
 	game.board.cells[init_pos][init_pos - 2] = CellContent.SNAKE;
 
-	let apple_pos: Position;
-	do {
-		apple_pos = [
-			Math.round(Math.random() * board_size),
-			Math.round(Math.random() * board_size)
-		]
-	} while (game.board.cells[apple_pos[0]][apple_pos[1]] == CellContent.SNAKE);
-	game.board.apple_position = apple_pos;
-	game.board.cells[apple_pos[0]][apple_pos[1]] = CellContent.APPLE;
+	placeApple(game.board);
 }
 
 function drawCell(pos: Position): void {
