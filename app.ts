@@ -109,7 +109,8 @@ function update(game: Game): void {
 		grow = true;
 	}
 	else if (next_cell_content == CellContent.SNAKE && !positionEquals(getTail(game.snake), next_cell)) {
-		//handle game over
+		window.alert('Game Over! git gud');
+		location.reload();
 	}
 	advanceSnake(game.snake, game.board, grow);
 
