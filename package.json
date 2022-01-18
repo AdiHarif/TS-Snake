@@ -1,0 +1,12 @@
+{
+  "name": "ts-snake",
+  "version": "0.1.0",
+  "description": "A nice TypeScript tutorial exercise",
+  "main": "app.js",
+  "scripts": {
+    "build": "tsc app.ts"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}
