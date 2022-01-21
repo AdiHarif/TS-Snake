@@ -4,9 +4,11 @@
   "description": "A nice TypeScript tutorial exercise",
   "main": "app.js",
   "scripts": {
-    "build": "tsc app.ts"
+    "build": "tsc",
+    "start": "tsc && lite-server"
   },
   "devDependencies": {
+    "lite-server": "^2.6.1",
     "typescript": "^4.5.4"
   }
 }
