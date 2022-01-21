@@ -1,6 +1,6 @@
 
 import { Position, positionEquals, Direction, oppositeDirections } from "./basic_types.js";
-import { Snake, getHeadsNextPosition, getTail } from "./snake.js";
+import { Snake, getHeadsNextPosition, getTail, advanceSnake } from "./snake.js";
 import { Board , CellContent, getCellContent, placeApple } from "./board.js";
 
 
@@ -12,20 +12,6 @@ type Game = {
 }
 
 let game: Game;
-
-function advanceSnake(snake: Snake, board: Board, grow: boolean): void {
-	if (!grow) {
-		let tail_position: Position = getTail(snake);
-		board.cells[tail_position[0]][tail_position[1]] = CellContent.FREE;
-		snake.locations.pop();
-	}
-	const head_next_position: Position = getHeadsNextPosition(snake);
-	const head_current_position =  snake.locations[0];
-	board.cells[head_current_position[0]][head_current_position[1]] = CellContent.SNAKE;
-	board.cells[head_next_position[0]][head_next_position[1]] = CellContent.SNAKE_HEAD;
-	snake.locations.unshift(head_next_position);
-}
-
 
 function update(game: Game): void {
 	if (!oppositeDirections(pending_direction, game.snake.direction)) {
