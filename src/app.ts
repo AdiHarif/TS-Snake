@@ -1,5 +1,6 @@
 
 import { Position, positionEquals, Direction, oppositeDirections } from "./basic_types.js";
+import { Snake, getHeadsNextPosition, getTail } from "./snake.js";
 
 enum CellContent {
 	FREE,
@@ -8,11 +9,6 @@ enum CellContent {
 	APPLE
 }
 
-type Snake = {
-	locations: Position[];
-	direction: Direction;
-	speed: number;
-}
 
 type Board = {
 	cells: CellContent[][];
@@ -28,33 +24,6 @@ type Game = {
 
 let game: Game;
 
-function getHeadsNextPosition(snake: Snake): Position {
-	let current_position: Position = [...snake.locations[0]];
-	switch (snake.direction) {
-		case Direction.NORTH: {
-			current_position[0]--;
-			break;
-		}
-		case Direction.EAST: {
-			current_position[1]++;
-			break;
-		}
-		case Direction.SOUTH: {
-			current_position[0]++;
-			break;
-		}
-		case Direction.WEST: {
-			current_position[1]--;
-			break;
-		}
-	}
-	current_position = [
-		(current_position[0] + board_size) % board_size,
-		(current_position[1] + board_size) % board_size
-	]
-	return current_position;
-
-}
 
 function getCellContent(board: Board, position: Position): CellContent {
 	return board.cells[position[0]][position[1]];
@@ -71,10 +40,6 @@ function advanceSnake(snake: Snake, board: Board, grow: boolean): void {
 	board.cells[head_current_position[0]][head_current_position[1]] = CellContent.SNAKE;
 	board.cells[head_next_position[0]][head_next_position[1]] = CellContent.SNAKE_HEAD;
 	snake.locations.unshift(head_next_position);
-}
-
-function getTail(snake: Snake): Position {
-	return [...snake.locations[snake.locations.length - 1]];
 }
 
 function placeApple(board: Board): void {
