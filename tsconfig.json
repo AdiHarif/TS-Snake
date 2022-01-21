@@ -5,6 +5,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "rootDir": "src",
+    "outDir": "dist"
   }
 }
