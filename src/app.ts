@@ -1,25 +1,17 @@
 
-type Position = [number, number];
-
-enum Direction {
-	// the numeric values are actually used in oppositeDirections function
-	NORTH = 0,
-	EAST = 1,
-	SOUTH = 2,
-	WEST = 3
-}
-
-type Snake = {
-	locations: Position[];
-	direction: Direction;
-	speed: number;
-}
+import { Position, positionEquals, Direction, oppositeDirections } from "./basic_types.js";
 
 enum CellContent {
 	FREE,
 	SNAKE,
 	SNAKE_HEAD,
 	APPLE
+}
+
+type Snake = {
+	locations: Position[];
+	direction: Direction;
+	speed: number;
 }
 
 type Board = {
@@ -81,10 +73,6 @@ function advanceSnake(snake: Snake, board: Board, grow: boolean): void {
 	snake.locations.unshift(head_next_position);
 }
 
-function positionEquals(pos1: Position, pos2: Position): boolean {
-	return pos1[0] == pos2[0] && pos1[1] == pos2[1];
-}
-
 function getTail(snake: Snake): Position {
 	return [...snake.locations[snake.locations.length - 1]];
 }
@@ -101,10 +89,6 @@ function placeApple(board: Board): void {
 	} while (new_pos_content == CellContent.SNAKE || new_pos_content == CellContent.SNAKE_HEAD);
 	board.apple_position = new_pos;
 	board.cells[new_pos[0]][new_pos[1]] = CellContent.APPLE;
-}
-
-function oppositeDirections(dir1: Direction, dir2: Direction): boolean {
-	return (Math.abs(dir1 - dir2) == 2);
 }
 
 function update(game: Game): void {
