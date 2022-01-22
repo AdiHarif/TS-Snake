@@ -3,3 +3,6 @@ node_modules
 
 # built by tsc
 dist/*
+
+#vscode files
+.vscode/
