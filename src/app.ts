@@ -1,6 +1,6 @@
 
 import { Position, Direction, oppositeDirections } from "./basic_types.js";
-import { Snake, getHeadsNextPosition, getTail, advanceSnake } from "./snake.js";
+import { Snake } from "./snake.js";
 import { Board , CellContent } from "./board.js";
 
 
@@ -14,24 +14,9 @@ type Game = {
 let game: Game;
 
 function update(game: Game): void {
-	if (!oppositeDirections(pending_direction, game.snake.direction)) {
-		game.snake.direction = pending_direction;
-	}
-	let next_cell: Position = getHeadsNextPosition(game.snake);
-	let next_cell_content: CellContent = game.board.content(next_cell);
-	let grow: boolean = false;
-	if (next_cell_content ==  CellContent.APPLE) {
-		grow = true;
-	}
-	else if (next_cell_content == CellContent.SNAKE && getTail(game.snake).Equals(next_cell)) {
-		window.alert('Game Over! git gud');
-		location.reload();
-	}
-	advanceSnake(game.snake, game.board, grow);
+	game.snake.updateDirection(pending_direction);
+	game.snake.advance();
 
-	if (grow) {
-		game.board.placeApple();
-	}
 }
 
 let pending_direction: Direction = Direction.EAST;
@@ -54,6 +39,7 @@ function inputHandler(event: KeyboardEvent): void {
 }
 
 const board_size: number = 21;
+const snake_speed: number = 10;
 
 function initGame(): void {
 
@@ -66,26 +52,13 @@ function initGame(): void {
 		cells.push(new_row);
 	}
 
-	const init_pos: number = Math.round(board_size / 2);
-
+	let game_board: Board = new Board(board_size);
 	game = {
-		snake: {
-			locations: [
-				new Position(init_pos, init_pos),
-				new Position(init_pos, init_pos - 1),
-				new Position(init_pos, init_pos - 2)
-			],
-			direction: Direction.EAST,
-			speed: 10
-		},
-		board: new Board(board_size),
+		snake: new Snake(game_board),
+		board: game_board,
 		last_frame_timestamp: 0,
 		board_element: document.getElementById('board')
 	}
-
-	game.board.cells[init_pos][init_pos] = CellContent.SNAKE_HEAD;
-	game.board.cells[init_pos][init_pos - 1] = CellContent.SNAKE;
-	game.board.cells[init_pos][init_pos - 2] = CellContent.SNAKE;
 
 	game.board.placeApple();
 }
@@ -121,7 +94,7 @@ function draw(game: Game): void {
 function gameLoop(current_time: number): void {
 	window.requestAnimationFrame(gameLoop);
 	const frame_duration: number = (current_time - game.last_frame_timestamp) / 1000;
-	if (frame_duration < 1 / game.snake.speed) {
+	if (frame_duration < 1 / snake_speed) {
 		return;
 	}
 	game.last_frame_timestamp = current_time;
