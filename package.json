@@ -1,13 +1,17 @@
 {
+  "homepage": "https://adiharif.github.io/TS-Snake/",
   "name": "ts-snake",
   "version": "0.1.0",
   "description": "A nice TypeScript tutorial exercise",
   "main": "app.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && lite-server"
+    "start": "tsc && lite-server",
+    "predeploy": "npm run build && cp index.html dist/",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
+    "gh-pages": "^3.2.3",
     "lite-server": "^2.6.1",
     "typescript": "^4.5.4"
   }
