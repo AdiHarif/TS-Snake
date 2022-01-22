@@ -1,5 +1,5 @@
 
-import { Position, positionEquals, Direction, oppositeDirections } from "./basic_types.js";
+import { Position, Direction, oppositeDirections } from "./basic_types.js";
 import { Snake, getHeadsNextPosition, getTail, advanceSnake } from "./snake.js";
 import { Board , CellContent, getCellContent, placeApple } from "./board.js";
 
@@ -23,7 +23,7 @@ function update(game: Game): void {
 	if (next_cell_content ==  CellContent.APPLE) {
 		grow = true;
 	}
-	else if (next_cell_content == CellContent.SNAKE && !positionEquals(getTail(game.snake), next_cell)) {
+	else if (next_cell_content == CellContent.SNAKE && getTail(game.snake).Equals(next_cell)) {
 		window.alert('Game Over! git gud');
 		location.reload();
 	}
@@ -71,16 +71,16 @@ function initGame(): void {
 	game = {
 		snake: {
 			locations: [
-				[init_pos, init_pos],
-				[init_pos, init_pos - 1],
-				[init_pos, init_pos - 2]
+				new Position(init_pos, init_pos),
+				new Position(init_pos, init_pos - 1),
+				new Position(init_pos, init_pos - 2)
 			],
 			direction: Direction.EAST,
 			speed: 10
 		},
 		board: {
 			cells: cells,
-			apple_position: [0, 0]
+			apple_position: new Position(0, 0)
 		},
 		last_frame_timestamp: 0,
 		board_element: document.getElementById('board')
@@ -95,9 +95,9 @@ function initGame(): void {
 
 function drawCell(pos: Position): void {
 	const element: HTMLElement = document.createElement('div');
-	element.style.gridRowStart = (pos[0] + 1).toString();
-	element.style.gridColumnStart = (pos[1] + 1).toString();
-	const element_type: CellContent = game.board.cells[pos[0]][pos[1]];
+	element.style.gridRowStart = (pos.row + 1).toString();
+	element.style.gridColumnStart = (pos.col + 1).toString();
+	const element_type: CellContent = game.board.cells[pos.row][pos.col];
 	switch (element_type) {
 		case CellContent.SNAKE: {
 			element.classList.add('snake');

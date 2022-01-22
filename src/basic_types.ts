@@ -1,10 +1,9 @@
 
-export type Position = [number, number];
+export class Position {
+	constructor(public row: number, public col: number) {}
 
-export function positionEquals(pos1: Position, pos2: Position): boolean {
-	return pos1[0] == pos2[0] && pos1[1] == pos2[1];
+	Equals(this: Position, pos: Position) { return this.row  == pos.row  && this.col == pos.col; }
 }
-
 
 export enum Direction {
 	// the numeric values are actually used in oppositeDirections function
