@@ -1,7 +1,7 @@
 
 import { Position, Direction, oppositeDirections } from "./basic_types.js";
 import { Snake, getHeadsNextPosition, getTail, advanceSnake } from "./snake.js";
-import { Board , CellContent, getCellContent, placeApple } from "./board.js";
+import { Board , CellContent } from "./board.js";
 
 
 type Game = {
@@ -18,7 +18,7 @@ function update(game: Game): void {
 		game.snake.direction = pending_direction;
 	}
 	let next_cell: Position = getHeadsNextPosition(game.snake);
-	let next_cell_content: CellContent = getCellContent(game.board, next_cell);
+	let next_cell_content: CellContent = game.board.content(next_cell);
 	let grow: boolean = false;
 	if (next_cell_content ==  CellContent.APPLE) {
 		grow = true;
@@ -30,7 +30,7 @@ function update(game: Game): void {
 	advanceSnake(game.snake, game.board, grow);
 
 	if (grow) {
-		placeApple(game.board);
+		game.board.placeApple();
 	}
 }
 
@@ -78,10 +78,7 @@ function initGame(): void {
 			direction: Direction.EAST,
 			speed: 10
 		},
-		board: {
-			cells: cells,
-			apple_position: new Position(0, 0)
-		},
+		board: new Board(board_size),
 		last_frame_timestamp: 0,
 		board_element: document.getElementById('board')
 	}
@@ -90,7 +87,7 @@ function initGame(): void {
 	game.board.cells[init_pos][init_pos - 1] = CellContent.SNAKE;
 	game.board.cells[init_pos][init_pos - 2] = CellContent.SNAKE;
 
-	placeApple(game.board);
+	game.board.placeApple();
 }
 
 function drawCell(pos: Position): void {
@@ -118,7 +115,7 @@ function drawCell(pos: Position): void {
 function draw(game: Game): void {
 	game.board_element.innerHTML = '';
 	game.snake.locations.forEach(drawCell);
-	drawCell(game.board.apple_position);
+	drawCell(game.board.getApplePosition());
 }
 
 function gameLoop(current_time: number): void {
