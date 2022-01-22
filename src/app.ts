@@ -42,16 +42,6 @@ const board_size: number = 21;
 const snake_speed: number = 10;
 
 function initGame(): void {
-
-	let cells: CellContent[][] = [];
-	for (let i = 0; i < board_size; i++){
-		let new_row: CellContent[] = [];
-		for (let j = 0; j < board_size; j++){
-			new_row.push(CellContent.FREE);
-		}
-		cells.push(new_row);
-	}
-
 	let game_board: Board = new Board(board_size);
 	game = {
 		snake: new Snake(game_board),
