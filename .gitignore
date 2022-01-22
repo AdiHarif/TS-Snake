@@ -2,7 +2,7 @@
 node_modules
 
 # built by tsc
-dist/*
+dist/*.js*
 
 #vscode files
 .vscode/

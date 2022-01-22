@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && lite-server",
-    "predeploy": "npm run build && cp index.html dist/",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
@@ -15,4 +15,5 @@
     "lite-server": "^2.6.1",
     "typescript": "^4.5.4"
   }
+  
 }
