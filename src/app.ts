@@ -1,8 +1,8 @@
 
-import { Position, Direction, oppositeDirections } from "./basic_types.js";
+import { Position } from "./basic_types.js";
 import { Snake } from "./snake.js";
 import { Board , CellContent } from "./board.js";
-
+import { initInput, pending_direction } from "./input.js"
 
 type Game = {
 	snake: Snake;
@@ -17,25 +17,6 @@ function update(game: Game): void {
 	game.snake.updateDirection(pending_direction);
 	game.snake.advance();
 
-}
-
-let pending_direction: Direction = Direction.EAST;
-
-function inputHandler(event: KeyboardEvent): void {
-	switch (event.key) {
-		case 'ArrowUp':
-			pending_direction = Direction.NORTH;
-			break;
-		case 'ArrowRight':
-			pending_direction = Direction.EAST;
-			break;
-		case 'ArrowDown':
-			pending_direction = Direction.SOUTH;
-			break;
-		case 'ArrowLeft':
-			pending_direction = Direction.WEST;
-			break;
-	}
 }
 
 const board_size: number = 21;
@@ -93,7 +74,7 @@ function gameLoop(current_time: number): void {
 }
 
 function main(): void {
-	window.addEventListener('keydown', inputHandler);
+	initInput();
 	initGame();
 	gameLoop(game.last_frame_timestamp);
 }
