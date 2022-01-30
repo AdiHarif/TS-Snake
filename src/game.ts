@@ -9,6 +9,7 @@ export class Game {
 	private snake: Snake;
 	private board: Board;
 	private last_frame_timestamp: number;
+	private paused: Boolean = false;
 
 	constructor(board_size: number, private snake_speed: number) {
 		this.board = new Board(board_size);
@@ -29,6 +30,9 @@ export class Game {
 		if (frame_duration < 1 / this.snake_speed) {
 			return;
 		}
+		if (this.paused) {
+			return;
+		}
 		this.last_frame_timestamp = current_time;
 		this.update();
 		clearCanvas();
@@ -37,5 +41,9 @@ export class Game {
 	
 	start() {
 		this.gameLoop(0);
+	}
+
+	handlePause(this: Game): void {
+		this.paused = !this.paused;
 	}
 }

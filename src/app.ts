@@ -7,9 +7,9 @@ const BOARD_SIZE: number = 21;
 const snake_speed: number = 10;
 
 function main(): void {
-	initInput();
 	initCanvas();
 	let game: Game = new Game(BOARD_SIZE, snake_speed);
+	initInput(game);
 	game.start();
 }
 

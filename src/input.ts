@@ -1,5 +1,6 @@
 
 import { Direction } from "./basic_types.js"
+import { Game } from "./game.js";
 
 export let pending_direction: Direction;
 
@@ -17,10 +18,15 @@ function inputHandler(event: KeyboardEvent): void {
 		case 'ArrowLeft':
 			pending_direction = Direction.WEST;
 			break;
+		case 'p':
+			game_inst.handlePause();
 	}
 }
 
-export function initInput(): void {
+let game_inst:Game;
+
+export function initInput(game: Game): void {
 	pending_direction = Direction.EAST;
+	game_inst = game;
 	window.addEventListener('keydown', inputHandler);	
 }
