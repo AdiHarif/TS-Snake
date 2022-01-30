@@ -1,8 +1,8 @@
 
-import { Position } from "./basic_types.js";
 import { Snake } from "./snake.js";
 import { Board , CellContent } from "./board.js";
 import { initInput, pending_direction } from "./input.js"
+import { clearCanvas, initCanvas, drawBoard } from "./graphics.js";
 
 class Game {
 	private snake: Snake;
@@ -23,34 +23,6 @@ class Game {
 		this.snake.updateDirection(pending_direction);
 		this.snake.advance();
 	}
-
-	private drawCell(this:Game, pos: Position): void {
-		const element: HTMLElement = document.createElement('div');
-		element.style.gridRowStart = (pos.row + 1).toString();
-		element.style.gridColumnStart = (pos.col + 1).toString();
-		const element_type: CellContent = this.board.cells[pos.row][pos.col];
-		switch (element_type) {
-			case CellContent.SNAKE: {
-				element.classList.add('snake');
-				break;
-			}
-			case CellContent.SNAKE_HEAD:{
-				element.classList.add('snake-head');
-				break;
-			}
-			case CellContent.APPLE:{
-				element.classList.add('apple');
-				break;
-			}
-		}
-		this.board_element.appendChild(element);
-	}
-	
-	draw(this: Game): void {
-		this.board_element.innerHTML = '';
-		this.snake.locations.forEach((pos:Position) => { this.drawCell(pos);});
-		this.drawCell(this.board.getApplePosition());
-	}
 	
 	private gameLoop(this:Game, current_time: number): void {
 		window.requestAnimationFrame((time:number) => this.gameLoop(time));
@@ -60,7 +32,8 @@ class Game {
 		}
 		this.last_frame_timestamp = current_time;
 		this.update();
-		this.draw();
+		clearCanvas();
+		drawBoard(this.board);
 	}
 	
 	start() {
@@ -75,6 +48,7 @@ const snake_speed: number = 10;
 
 function main(): void {
 	initInput();
+	initCanvas();
 	game = new Game(board_size, snake_speed);
 	game.start();
 }
