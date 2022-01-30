@@ -2,7 +2,7 @@
 import { Snake } from "./snake.js";
 import { Board } from "./board.js";
 import { pending_direction } from "./input.js"
-import { clearCanvas, drawBoard } from "./graphics.js";
+import { clearCanvas, drawGame } from "./graphics.js";
 
 
 export class Game {
@@ -10,6 +10,7 @@ export class Game {
 	private board: Board;
 	private last_frame_timestamp: number;
 	private paused: Boolean = false;
+	private score = 0;
 
 	constructor(board_size: number, private snake_speed: number) {
 		this.board = new Board(board_size);
@@ -21,7 +22,10 @@ export class Game {
 	
 	update(this: Game): void {
 		this.snake.updateDirection(pending_direction);
-		this.snake.advance();
+		let apple_eaten: boolean = this.snake.advance();
+		if (apple_eaten) {
+			this.score += 10;
+		}
 	}
 	
 	private gameLoop(this:Game, current_time: number): void {
@@ -36,14 +40,22 @@ export class Game {
 		this.last_frame_timestamp = current_time;
 		this.update();
 		clearCanvas();
-		drawBoard(this.board);
+		drawGame(this);
 	}
 	
-	start() {
+	start(this: Game) {
 		this.gameLoop(0);
 	}
 
 	handlePause(this: Game): void {
 		this.paused = !this.paused;
+	}
+
+	getBoard(this: Game): Board {
+		return this.board;
+	}
+
+	getScore(this: Game): number {
+		return this.score;
 	}
 }

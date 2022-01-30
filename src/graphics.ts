@@ -1,6 +1,7 @@
 
 import { Position } from "./basic_types.js";
 import { Board, CellContent } from "./board.js"
+import { Game } from "./game.js"
 
 const GRID_COLOR: string = "LightSkyBlue";
 const SNAKE_COLOR: string = "lawngreen";
@@ -8,6 +9,9 @@ const SNAKE_HEAD_COLOR: string = "green";
 const APPLE_COLOR: string = "red";
 const BORDER_COLOR: string = "black";
 const BACKGROUNG_COLOR: string = "white";
+const SCORE_COLOR: string = "black";
+
+const SCORE_FONT_NAME: string = "monospace";
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
@@ -105,7 +109,14 @@ function drawBorder(): void {
 	ctx.strokeRect(board_start, board_start, board_pixel_width, board_pixel_width);
 }
 
-export function drawBoard(board: Board): void {
+function drawScore(score: number): void {
+	ctx.font = (cell_size * 0.8) + "px " + SCORE_FONT_NAME;
+	ctx.fillStyle = SCORE_COLOR;
+	ctx.textAlign = "left";
+	ctx.fillText("Score: " + score, 0, board_start * 0.8);
+}
+
+function drawBoard(board: Board): void {
 	board_size = board.size;
 	drawGrid();
 	drawBorder();
@@ -115,4 +126,9 @@ export function drawBoard(board: Board): void {
 		}
 	}
 	drawApple(board.getApplePosition().row, board.getApplePosition().col);
+}
+
+export function drawGame(game: Game): void {
+	drawBoard(game.getBoard());
+	drawScore(game.getScore());
 }

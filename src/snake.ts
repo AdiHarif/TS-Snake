@@ -61,7 +61,7 @@ export class Snake {
 		}
 	}
 
-	advance(this: Snake): void {
+	advance(this: Snake): boolean {
 		const next_cell: Position = this.nextPosition();
 		const next_cell_content: CellContent = this.board.content(next_cell);
 		const grow: boolean = (next_cell_content ==  CellContent.APPLE);
@@ -87,5 +87,7 @@ export class Snake {
 		if (grow) {
 			this.board.placeApple();
 		}
+
+		return grow;
 	}
 }
