@@ -73,6 +73,7 @@ export class Snake {
         if (grow) {
             this.board.placeApple();
         }
+        return grow;
     }
 }
 //# sourceMappingURL=snake.js.map
