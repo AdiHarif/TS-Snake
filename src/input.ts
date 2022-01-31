@@ -1,5 +1,5 @@
 
-import { Direction, GameState } from "./basic_types.js"
+import { Direction } from "./basic_types.js"
 import { Game } from "./game.js";
 
 export let pending_direction: Direction;
@@ -28,5 +28,23 @@ let game_inst:Game;
 export function initInput(game: Game): void {
 	pending_direction = Direction.EAST;
 	game_inst = game;
-	window.addEventListener('keydown', inputHandler);	
+	window.addEventListener("keydown", inputHandler);
+}
+
+function restartHandler(event: KeyboardEvent): void {
+	window.removeEventListener("keydown", restartHandler);
+	window.addEventListener("keydown", inputHandler);
+	already_waiting = false;
+	game_inst.restart();
+}
+
+let already_waiting: boolean = false;
+
+export function waitForRestart(): void {
+	if (already_waiting) {
+		return;
+	}
+	already_waiting = true;
+	window.removeEventListener("keydown", inputHandler);
+	window.addEventListener("keydown", restartHandler);
 }
