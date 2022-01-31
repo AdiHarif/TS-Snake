@@ -1,5 +1,5 @@
 
-import { Direction } from "./basic_types.js"
+import { Direction, GameState } from "./basic_types.js"
 import { Game } from "./game.js";
 
 export let pending_direction: Direction;

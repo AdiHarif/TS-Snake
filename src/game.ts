@@ -3,13 +3,15 @@ import { Snake } from "./snake.js";
 import { Board } from "./board.js";
 import { pending_direction } from "./input.js"
 import { clearCanvas, drawGame } from "./graphics.js";
+import { GameState } from "./basic_types.js";
 
 
 export class Game {
 	private snake: Snake;
 	private board: Board;
 	private last_frame_timestamp: number;
-	private paused: Boolean = false;
+	private state: GameState = GameState.PRE_START;
+	private paused: boolean = false;
 	private score = 0;
 
 	constructor(board_size: number, private snake_speed: number) {
@@ -20,15 +22,15 @@ export class Game {
 		this.board.placeApple();
 	}
 	
-	update(this: Game): void {
+	private update(this: Game): void {
 		this.snake.updateDirection(pending_direction);
-		let apple_eaten: boolean = this.snake.advance();
-		if (apple_eaten) {
-			this.score += 10;
-		}
+		this.snake.advance(this);
 	}
 	
 	private gameLoop(this:Game, current_time: number): void {
+		if (this.state == GameState.GAME_OVER) {
+			return;
+		}
 		window.requestAnimationFrame((time:number) => this.gameLoop(time));
 		const frame_duration: number = (current_time - this.last_frame_timestamp) / 1000;
 		if (frame_duration < 1 / this.snake_speed) {
@@ -44,7 +46,12 @@ export class Game {
 	}
 	
 	start(this: Game) {
+		this.state = GameState.IN_GAME;
 		this.gameLoop(0);
+	}
+
+	end(this: Game) {
+		this.state = GameState.GAME_OVER;
 	}
 
 	handlePause(this: Game): void {
@@ -57,5 +64,9 @@ export class Game {
 
 	getScore(this: Game): number {
 		return this.score;
+	}
+
+	addScore(this: Game): void {
+		this.score += 10;
 	}
 }

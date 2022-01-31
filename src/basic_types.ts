@@ -16,3 +16,9 @@ export enum Direction {
 export function oppositeDirections(dir1: Direction, dir2: Direction): boolean {
 	return (Math.abs(dir1 - dir2) == 2);
 }
+
+export enum GameState {
+	PRE_START,
+	IN_GAME,
+	GAME_OVER
+}

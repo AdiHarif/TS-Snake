@@ -1,6 +1,7 @@
 
 import { Position, Direction, oppositeDirections } from "./basic_types.js";
 import { Board, CellContent } from "./board.js";
+import { Game } from "./game.js";
 
 export class Snake {
 	public locations: Position[];
@@ -61,15 +62,14 @@ export class Snake {
 		}
 	}
 
-	advance(this: Snake): boolean {
+	advance(this: Snake, game: Game): boolean {
 		const next_cell: Position = this.nextPosition();
 		const next_cell_content: CellContent = this.board.content(next_cell);
 		const grow: boolean = (next_cell_content ==  CellContent.APPLE);
 
 		if (next_cell_content == CellContent.SNAKE && !this.tail().Equals(next_cell)) {
-			window.alert('Game Over! git gud');
-			window.stop();
-			location.reload();
+			game.end();
+			return;
 		}
 
 		if (!grow) {
@@ -86,6 +86,7 @@ export class Snake {
 
 		if (grow) {
 			this.board.placeApple();
+			game.addScore();
 		}
 
 		return grow;
