@@ -51,14 +51,13 @@ export class Snake {
             this.direction = new_direction;
         }
     }
-    advance() {
+    advance(game) {
         const next_cell = this.nextPosition();
         const next_cell_content = this.board.content(next_cell);
         const grow = (next_cell_content == CellContent.APPLE);
         if (next_cell_content == CellContent.SNAKE && !this.tail().Equals(next_cell)) {
-            window.alert('Game Over! git gud');
-            window.stop();
-            location.reload();
+            game.end();
+            return;
         }
         if (!grow) {
             let tail_position = this.tail();
@@ -72,6 +71,7 @@ export class Snake {
         this.locations.unshift(head_next_position);
         if (grow) {
             this.board.placeApple();
+            game.addScore();
         }
         return grow;
     }

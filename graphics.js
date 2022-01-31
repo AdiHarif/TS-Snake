@@ -1,4 +1,4 @@
-import { Position } from "./basic_types.js";
+import { GameState, Position } from "./basic_types.js";
 import { CellContent } from "./board.js";
 const GRID_COLOR = "LightSkyBlue";
 const SNAKE_COLOR = "lawngreen";
@@ -7,13 +7,17 @@ const APPLE_COLOR = "red";
 const BORDER_COLOR = "black";
 const BACKGROUNG_COLOR = "white";
 const SCORE_COLOR = "black";
+const POPUP_COLOR = "Beige";
+const POPUP_TEXT_COLOR = "black";
 const SCORE_FONT_NAME = "monospace";
+const POPUP_FONT_NAME = "monospace";
 let canvas;
 let ctx;
 let board_size;
 let board_start;
 let board_end;
 let cell_size;
+let board_pixel_width;
 export function initCanvas() {
     canvas = document.getElementById('canvas');
     resizeCanvas();
@@ -33,6 +37,7 @@ function resizeCanvas() {
     cell_size = window_size / (board_size + 2);
     board_start = cell_size;
     board_end = window_size - cell_size;
+    board_pixel_width = board_size * cell_size;
 }
 function drawLine(x1, y1, x2, y2, color, width) {
     ctx.strokeStyle = color;
@@ -43,7 +48,6 @@ function drawLine(x1, y1, x2, y2, color, width) {
     ctx.stroke();
 }
 function drawGrid() {
-    let canvas_size = canvas.width;
     let interval = cell_size;
     for (let i = 1; i < board_size; i++) {
         let line_pos = board_start + (interval * i);
@@ -90,7 +94,6 @@ function drawApple(row, col) {
 function drawBorder() {
     ctx.strokeStyle = BORDER_COLOR;
     ctx.lineWidth = 5;
-    const board_pixel_width = board_size * cell_size;
     ctx.strokeRect(board_start, board_start, board_pixel_width, board_pixel_width);
 }
 function drawScore(score) {
@@ -110,8 +113,31 @@ function drawBoard(board) {
     }
     drawApple(board.getApplePosition().row, board.getApplePosition().col);
 }
+function drawGameOverMessage(score) {
+    const popup_width = 15 * cell_size;
+    const popup_height = 3 * cell_size;
+    const popup_x = (canvas.width / 2) - (popup_width / 2);
+    const popup_y = (canvas.height / 2) - (popup_height / 2);
+    ctx.beginPath();
+    ctx.fillStyle = POPUP_COLOR;
+    ctx.fillRect(popup_x, popup_y, popup_width, popup_height);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = BORDER_COLOR;
+    ctx.strokeRect(popup_x, popup_y, popup_width, popup_height);
+    const first_line_y = popup_y + cell_size;
+    ctx.font = (cell_size * 0.8) + "px " + POPUP_FONT_NAME;
+    ctx.fillStyle = POPUP_TEXT_COLOR;
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over! Your score: " + score, canvas.width / 2, first_line_y);
+    const second_line_y = popup_y + (2 * cell_size);
+    ctx.font = (cell_size * 0.5) + "px " + POPUP_FONT_NAME;
+    ctx.fillText("Press any key to restart and git gud", canvas.width / 2, second_line_y);
+}
 export function drawGame(game) {
     drawBoard(game.getBoard());
     drawScore(game.getScore());
+    if (game.getState() == GameState.GAME_OVER) {
+        drawGameOverMessage(game.getScore());
+    }
 }
 //# sourceMappingURL=graphics.js.map
